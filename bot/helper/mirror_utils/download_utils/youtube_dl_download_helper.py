@@ -1,6 +1,7 @@
 from .download_helper import DownloadHelper
 import time
-from youtube_dl import YoutubeDL, DownloadError
+from yt_dlp import YoutubeDL, DownloadError
+from yt_dlp.utils import sanitize_filename
 from bot import download_dict_lock, download_dict
 from ..status_utils.youtube_dl_download_status import YoutubeDLDownloadStatus
 import logging
@@ -121,7 +122,7 @@ class YoutubeDLHelper(DownloadHelper):
                 if v and v.get('filesize'):
                     self.size += float(v['filesize'])
             # For playlists, ydl.prepare-filename returns the following format: <Playlist Name>-<Id of playlist>.NA
-            self.__name = name.split(f"-{result['id']}")[0]
+            self.__name = sanitize_filename(result['title'])
             self.vid_id = video.get('id')
             self.is_playlist = True
         else:
